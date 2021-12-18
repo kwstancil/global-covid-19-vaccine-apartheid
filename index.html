@@ -41,46 +41,50 @@
       </header>
 
       <div class="row">
-        <div class="col-md-9 p-0">
-          <div id="map"></div>
-        </div>
-        <div id="content" class="col-md-3 py-2 py-2 overflow-scroll">
+        <div id="content" class="col-md-3 py-2 overflow-scroll">
         <h1>A Deadly 'Pathology of Power'</h1>
           <p>
           Use the slider to see how national vaccination rates have changed over time.
           For a snapshot of inoculation trends in a given country, hover over the map.
           </p>
           <p>
-          Use the dropdown menu to explore WTO members' positions on a proposed intellectual property waiver
-          first introduced by India and South Africa on October 2, 2020, when the pandemic death toll had just surpassed 1 million.
+          Use the dropdown menu to explore WTO members' positions on a proposed intellectual property waiver first
+          introduced by India and South Africa on October 2, 2020, when the pandemic death toll had just surpassed 1 million.
           </p>
           <p>
-          Info
+          <u>Background</u>
+          <br>
+          Will add more later
           </p>
           <p>
-          Data: Vaccination rates came courtesy of <a href='https://github.com/owid/covid-19-data/tree/master/public/data' target="blank"> Our World in Data</a> - see Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021);
+          <u>Sources</u>
+          <br>
+          Vaccination rates came courtesy of <a href='https://github.com/owid/covid-19-data/tree/master/public/data' target="blank"> Our World in Data</a> - see Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021);
           Information about whether governments support or oppose the TRIPS waiver proposal was supplied by <a href='https://msfaccess.org/no-patents-no-monopolies-pandemic' target="blank"> Doctors Without Borders</a>;
           Finally, <a href='https://www.naturalearthdata.com/downloads/50m-cultural-vectors/' target="blank">Natural Earth</a> provided national boundaries
           and <a href='https://gavinr.com/open-data/world-countries-centroids/' target="blank">Gavin Rehkemper</a> provided country centroids.
           </p>
         </div>
+
+        <div class="col-md-9 p-0">
+          <div id="map">
+        </div>
+
+        <div id="ui-controls">
+          <label><span class="min">Dec 2020</span><span class="max">Dec 2021</span>
+            <input type="range" min="2001" max="2015" value="2001" step="1" class="year-slider">
+          </label>
+        </div>
+      </div>
       </div>
 
-    <div id="map"></div>
-
-    <div id="ui-controls">
-      <label><span class="min">Dec 2020</span><span class="max">Dec 2021</span>
-        <input type="range" min="2001" max="2015" value="2001" step="1" class="year-slider">
-      </label>
-    </div>
-
     <footer class="footer fixed-bottom bg-dark" id="footer">
-  <div class="row">
-    <div class="col-12 text-center text-white pt-2">
-      Map authored by <a href="https://kwstancil.github.io/map-portfolio/">Kenny Stancil</a>
+      <div class="row">
+        <div class="col-12 text-center text-white pt-2">
+          Map authored by <a href="https://kwstancil.github.io/map-portfolio/">Kenny Stancil</a>
+        </div>
+    </footer>
     </div>
-  </div>
-</footer>
 
 
   <script
@@ -97,6 +101,14 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer">
   </script>
+
+  <script src="vendor/js/bundle.min.js" defer></script>
+
+  <script src="https://d3js.org/d3.v7.js"></script>
+
+  <script src="https://unpkg.com/topojson@3"></script>
+
+  <script src="js/utilities.js"></script>
 
   <script src ="js/app.js"></script>
 
