@@ -161,7 +161,7 @@
     const normValue = "owid_covid_latest_people_fully_vaccinated_per_hundred";
 
     // AJAX request for GeoJSON data
-    fetch("data/vaccination_rate.json")
+    fetch('data/vaccination_rate.json')
       // after it is returned...
       .then(function (response) {
         // if has a property called ok, and it is true
@@ -182,7 +182,7 @@
       });
 
     function drawMap(data) {
-      console.log(data); // data is now accessible here
+
       // Use Leaflet's L.geoJson() method to convert our GeoJSON data into a Leaflet object
       const vaxrate = L.geoJson(data, {
         // style nations with initial default path options
@@ -216,41 +216,7 @@
         },
       }).addTo(map);
 
-        // create Leaflet object with geometry data and add to map
-        const dataLayer = L.geoJson(vaxrate, {
-          style: function (feature) {
-            return {
-              color: "black",
-              weight: 1,
-              fillOpacity: 1,
-              fillColor: "#1f78b4"
-            };
-          },
-
-          // add hover/touch functionality to each feature layer
-          onEachFeature: function (feature, layer) {
-            // when mousing over a layer
-            layer.on("mouseover", function () {
-              // change the stroke color and bring that element to the front
-              layer
-                .setStyle({
-                  color: "#40ff00",
-                })
-                .bringToFront();
-            });
-
-            // on mousing off layer
-            layer.on("mouseout", function () {
-              // reset the layer style to its original stroke color
-              layer.setStyle({
-                color: "black",
-              });
-            });
-          },
-        }).addTo(map);
-
-        addUi(vaxrate);
-			  updateMap(vaxrate);
+        updateMap(vaxrate);
 
       } // end drawMap()
 
@@ -268,10 +234,19 @@
 				});
 
 				// assemble string sequence of info for tooltip (end line break with + operator)
-				let tooltipInfo = `<b>${props["ADMIN"]}</b></br>
-				${(props[normValue]).toLocaleString()}%`;
+				let tooltipInfo = ''
+        if (props.ADMIN) {
+          //build the tooltip
+        tooltip = `<b>${props['ADMIN']}</b><br />`
+        }
 
-				// bind a tooltip to layer with country-specific information
+        if (props[normValue] != 'null') {
+          tooltip += `${(props[normValue])}% fully inoculated<br />
+          ${(props["owid_covid_latest_people_vaccinated_per_hundred"])}% partially inoculated<br />
+          ${(props["owid_covid_latest_total_boosters_per_hundred"])} booster shots administered per 100 people`
+        }
+
+				// bind tooltip to layer
 			  layer.bindTooltip(tooltipInfo, {
 				 // sticky property so tooltip follows the mouse
 				 sticky: true,
@@ -287,7 +262,7 @@
   		// create empty Array for storing values
   		const values = [];
 
-  		// loop through all the counties
+  		// loop through all the vaxrates
   		vaxrate.eachLayer(function (layer) {
     		let value =
       		layer.feature.properties[normValue];
