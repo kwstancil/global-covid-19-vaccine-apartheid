@@ -127,11 +127,11 @@
       // create the Leaflet map
       const map = L.map("map", options);
 
-      map.fitBounds([[75, -160], [-49, -176]]) // diagonal corners on the bounding rectangle
+      map.fitBounds([[57.39, 196.74], [-48.13, -191.64]]) // diagonal corners on the bounding rectangle
 
       // request tiles and add to map
       const tiles = L.tileLayer(
-        "http://{s}.tile.stamen.com/toner-background/{z}/{x}/{y}.{ext}", {
+        "http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.{ext}", {
           attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
           subdomains: "abcd",
           ext: "png",
