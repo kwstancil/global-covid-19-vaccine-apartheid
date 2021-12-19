@@ -26,5 +26,4 @@
       legend.classList.toggle("show-legend")
   })
 
-
 });
