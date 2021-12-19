@@ -2,7 +2,7 @@
   height: 80vh;
 }
 
-#legend {
+  #legend {
     font-size: 1rem;
     border-radius: 5px;
     max-width: 200px;
@@ -24,6 +24,13 @@
     content: '';
     display: block;
     clear: both;
+  }
+
+  #ui {
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    z-index: 1100;
   }
 
   /* Small devices (landscape phones, 576px and up) */

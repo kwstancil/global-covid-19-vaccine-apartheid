@@ -91,6 +91,24 @@
 
     <div class="bg-secondary py-2 px-3 ml-3 mt-3 text-white" id="legend"></div>
 
+    <div id="ui" class="dropdown">
+      <a
+        class="btn btn-secondary dropdown-toggle"
+        href="#"
+        role="button"
+        id="dropdownMenuLink"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        Sharing knowledge or hoarding it?
+      </a>
+      <div
+        class="dropdown-menu"
+        aria-labelledby="dropdownMenuLink"
+      ></div>
+    </div>
+
     <!-- Add Bootstrap -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
@@ -162,6 +180,14 @@
     // set global variable for map
     const normValue = "owid_covid_latest_people_fully_vaccinated_per_hundred";
 
+    // fetch points representing support for/opposition to TRIPS waiver
+    const waiverTopoJson = d3.json('data/support_trips_waiver.topojson')
+    console.log(waiverTopoJson)
+
+    // fetch points representing idle vaccine manufacturing capacity
+    const factoryTopoJson = d3.json('data/idle_production_capacity.topojson')
+    console.log(factoryTopoJson)
+
     // AJAX request for GeoJSON data
     fetch('data/vaccination_rate.json')
       // after it is returned...
@@ -183,7 +209,7 @@
         drawMap(data);
       });
 
-    function drawMap(data) {
+    function drawMap(data, waiverTopoJson) {
 
       // Use Leaflet's L.geoJson() method to convert our GeoJSON data into a Leaflet object
       const vaxrate = L.geoJson(data, {
