@@ -158,10 +158,10 @@
     ).addTo(map);
 
     // set global variable for map
-    const normValue = "people_fully_vaccinated_per_hundred";
+    const normValue = "owid_latest_covid_people_fully_vaccinated_per_hundred";
 
     // AJAX request for GeoJSON data
-    fetch("data/owid_covid_latest.json")
+    fetch("data/vaccination_rate.geojson")
       // after it is returned...
       .then(function (response) {
         // if has a property called ok, and it is true
@@ -181,10 +181,43 @@
         drawMap(data);
       });
 
-    function drawMap(nations, colorize) {
+    function drawMap(data) {
+      console.log(data); // data is now accessible here
+      // Use Leaflet's L.geoJson() method to convert our GeoJSON data into a Leaflet object
+      const vaxrate = L.geoJson(data, {
+        // style nations with initial default path options
+        style: function (feature) {
+          return {
+            color: "#20282e",
+            weight: 2,
+            fillOpacity: 1,
+          };
+        },
+
+        // add hover/touch functionality to each feature layer
+        onEachFeature: function (feature, layer) {
+          // when mousing over a layer
+          layer.on("mouseover", function () {
+            // change the stroke color and bring that element to the front
+            layer
+              .setStyle({
+                color: "#ff6e00",
+              })
+              .bringToFront();
+          });
+
+          // on mousing off layer
+          layer.on("mouseout", function () {
+            // reset the layer style to its original stroke color
+            layer.setStyle({
+              color: "#20282e",
+            });
+          });
+        },
+      }).addTo(map);
 
         // create Leaflet object with geometry data and add to map
-        const dataLayer = L.geoJson(nations, {
+        const dataLayer = L.geoJson(vaxrate, {
           style: function (feature) {
             return {
               color: "black",
@@ -216,11 +249,8 @@
           },
         }).addTo(map);
 
-        //create the slider
-        createSliderUI(dataLayer, colorize);
-
-        //call to initially color the map with first timestamp
-        updateMap(dataLayer, colorize, '12/1/2020');
+        addUi(vaxrate);
+			  updateMap(vaxrate);
 
       } // end drawMap()
 
