@@ -1,19 +1,17 @@
-  #map {
-    position: absolute;
-    width: 100%;
-    top: 0;
-    bottom: 0;
-  }
+#map {
+  height: 80vh;
+  width: 80vw;
+}
 
-  .legend {
-    padding: 6px 8px;
-    font-size: 1em;
-    background: rgba(75, 75, 75, 0.8);
-    color: whitesmoke;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    width: 160px;
-  }
+#legend {
+  padding: 6px 8px;
+  font-size: 1em;
+  background: rgba(75, 75, 75, 0.8);
+  color: whitesmoke;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  width: 160px;
+}
 
   .legend h3 {
     font-size: 1.1em;
@@ -46,29 +44,19 @@
     margin-right: 10px;
   }
 
-  #slider {
-    width: 200px;
-    padding: 8px 25px 8px 15px;
-    background: rgba(75, 75, 75, 0.8);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    color: whitesmoke;
+  /* Small devices (landscape phones, 576px and up) */
+  @media (min-width: 576px) {}
+
+  /* Medium devices (tablets, 768px and up) */
+  @media (min-width: 768px) {
+
+    aside {
+      height: 80vh;
+    }
   }
 
-  #slider .min {
-    float: left;
-  }
+  /* Large devices (desktops, 992px and up) */
+  @media (min-width: 992px) {}
 
-  #slider .max {
-    float: right;
-    margin-right: -15px;
-  }
-
-  .year-slider {
-    width: 100%;
-  }
-
-  label {
-    font-size: 1.1em;
-    font-weight: bold;
-  }
+  /* Extra large devices (large desktops, 1200px and up) */
+  @media (min-width: 1200px) {}
