@@ -183,7 +183,7 @@
         //loop through csv data for each nation
         for (var d in data.data) {
 
-          if (props.SOV_AG == data.data[d].iso_code) { //  if the country name in the geojson matches the country name in the csv
+          if (props.SOV_A3 == data.data[d].iso_code) { //  if the country name in the geojson matches the country name in the csv
             nations.features[nation].properties = data.data[d]; // add csv data to json feature's properties
             break;
           }
@@ -200,7 +200,7 @@
         for (const prop in nation.properties) {
 
           // if the attribute is a number and not the country name
-          if (prop != "SOV_AG" && prop != "iso_code")  {
+          if (prop != "SOV_A3" && prop != "iso_code")  {
 
             if (nation.properties[prop] != null){
 
@@ -232,7 +232,7 @@
 
     } // end processData()
 
-    function drawMap(counties, colorize) {
+    function drawMap(nations, colorize) {
 
         // create Leaflet object with geometry data and add to map
         const dataLayer = L.geoJson(nations, {
@@ -275,6 +275,36 @@
 
       } // end drawMap()
 
+      function updateMap(dataLayer, colorize, currentDay) {
+
+      // loop through each nation layer to update the color
+      dataLayer.eachLayer(function (layer) {
+
+        // refer to properties
+        const props = layer.feature.properties;
+
+        // update layer color based on timestamp
+        layer.setStyle({
+          fillColor: colorize(Number(props[currentDay]))
+        });
+
+        let tooltip = ''
+        if (props.ADMIN) {
+          // build the tooltip
+        tooltip = `<b>${props['NAME']} County</b><br />`
+        }
+
+        if (props[currentDay] != 'null' && props[currentYear] != undefined) {
+          tooltip += `${props[currentYear]}% Unemployment`;
+        } else {
+          tooltip += 'No data available'
+        }
+        // bind tooltip to layer
+        layer.bindTooltip(tooltip, {
+          sticky: false,
+        });
+      });
+    } // end updateMap()
 
 
     </script>
