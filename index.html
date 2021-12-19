@@ -180,14 +180,6 @@
     // set global variable for map
     const normValue = "owid_covid_latest_people_fully_vaccinated_per_hundred";
 
-    // fetch points representing support for/opposition to TRIPS waiver
-    const waiverTopoJson = d3.json('data/support_trips_waiver.topojson')
-    console.log(waiverTopoJson)
-
-    // fetch points representing idle vaccine manufacturing capacity
-    const factoryTopoJson = d3.json('data/idle_production_capacity.topojson')
-    console.log(factoryTopoJson)
-
     // AJAX request for GeoJSON data
     fetch('data/vaccination_rate.json')
       // after it is returned...
@@ -375,6 +367,36 @@
 			}
 		}
 
+
+    // fetch points representing support for/opposition to TRIPS waiver
+    const waiverTopoJson = d3.json('data/support_trips_waiver.topojson')
+    console.log(waiverTopoJson)
+
+    // fetch points representing idle vaccine manufacturing capacity
+    const factoryTopoJson = d3.json('data/idle_production_capacity.topojson')
+    console.log(factoryTopoJson)
+
+    // append a new g element
+  const waiver = svg.append('g')
+    .selectAll('path')
+    .data(waiverGeoJson.features) // use the GeoJSON features
+    .join('path')  // join them to path elements
+    .attr('d', path)  // use our path generator to project them on the screen
+    .attr('class', 'TRIPS_WAIVER') // give each path element a class name of TRIPS_WAIVER
+    .style('fill', function(d) {
+      if (d.properties.TRIPS_WAIVER == 0) {
+        return '#FF0000';
+      }
+      if (d.properties.TRIPS_WAIVER == 1) {
+        return '#008a19';
+      }
+      if (d.properties.TRIPS_WAIVER == 2) {
+        return '#fff82e';
+      }
+      if (d.properties.TRIPS_WAIVER == null) {
+        return 'none';
+      }
+    })
 
     </script>
   </body>
