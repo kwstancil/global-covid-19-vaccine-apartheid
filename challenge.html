@@ -1,0 +1,166 @@
+Code that I got stuck on
+
+1) CREATING A SLIDER THAT ACCURATELY INTERPRETS DAILY, AS OPPOSED TO ANNUAL, CHANGES
+
+// AJAX request for GeoJSON data
+fetch("data/nation_states.json")
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (nations) {
+    console.log(nations);
+
+    Papa.parse('data/owid_covid_data.csv', {
+      download: true,
+      header: true,
+      complete: function(data) {
+
+        // data is accessible to us here
+        console.log('data: ', data);
+
+        // note that nations is also accessible here
+        console.log('nations: ', nations);
+
+        // create function to join data and nations
+        processData(nations, data);
+        }
+      }); // end of Papa.parse()
+    })
+    .catch(function (error) {
+      console.log(`Ruh roh! An error has occurred`, error);
+    });
+
+function processData(nations, data) {
+
+  // loop through the json
+  for (var nation in nations.features) {
+
+    var props = nations.features[nation].properties;
+
+    //loop through csv data for each nation
+    for (var d in data.data) {
+
+      if (props.SOV_A3 == data.data[d].iso_code) { //  if the country name in the geojson matches the country name in the csv
+        nations.features[nation].properties = data.data[d]; // add csv data to json feature's properties
+        break;
+      }
+    }
+  }
+
+  // create empty array to store all the data values
+  const rates = [];
+  const t = {}
+  // iterate through all the counties
+  nations.features.forEach(function(nation) {
+
+    // iterate through all the props of each nation
+    for (const prop in nation.properties) {
+
+      // if the attribute is a number and not the country name
+      if (prop != "SOV_A3" && prop != "iso_code")  {
+
+        if (nation.properties[prop] != null){
+
+        // push that attribute value into the array
+        rates.push(Number(nation.properties[prop]));
+        }
+      }
+    }
+  });
+
+  // verify the results
+  console.log(t,rates.sort((a,b) => b - a));
+
+  // create class breaks
+  var breaks = chroma.limits(rates, 'q', 5);
+
+  // create color generator function
+  var colorize = chroma.scale(chroma.brewer.OrRd)
+      .classes(breaks)
+      .mode('lab');
+
+  console.log(colorize) // function (a){var b; return b=s(u(a)), m&&b[m]?b[m]():b}
+
+  // call to draw the map
+  drawMap(nations, colorize);
+
+  // call to draw the legend
+  drawLegend(breaks, colorize);
+
+} // end processData()
+
+function drawMap(nations, colorize) {
+
+    // create Leaflet object with geometry data and add to map
+    const dataLayer = L.geoJson(nations, {
+      style: function (feature) {
+        return {
+          color: "black",
+          weight: 1,
+          fillOpacity: 1,
+          fillColor: "#1f78b4"
+        };
+      },
+
+      // add hover/touch functionality to each feature layer
+      onEachFeature: function (feature, layer) {
+        // when mousing over a layer
+        layer.on("mouseover", function () {
+          // change the stroke color and bring that element to the front
+          layer
+            .setStyle({
+              color: "#40ff00",
+            })
+            .bringToFront();
+        });
+
+        // on mousing off layer
+        layer.on("mouseout", function () {
+          // reset the layer style to its original stroke color
+          layer.setStyle({
+            color: "black",
+          });
+        });
+      },
+    }).addTo(map);
+
+    //create the slider
+    createSliderUI(dataLayer, colorize);
+
+    //call to initially color the map with first timestamp
+    updateMap(dataLayer, colorize, '12/1/2020');
+
+  } // end drawMap()
+
+  function updateMap(dataLayer, colorize, currentDay) {
+
+  // loop through each nation layer to update the color
+  dataLayer.eachLayer(function (layer) {
+
+    // refer to properties
+    const props = layer.feature.properties;
+
+    // update layer color based on timestamp
+    layer.setStyle({
+      fillColor: colorize(Number(props[currentDay]))
+    });
+
+    let tooltip = ''
+    if (props.ADMIN) {
+      // build the tooltip
+    tooltip = `<b>${props['NAME']}</b><br />`
+    }
+
+    if (props[currentDay] != 'null' && props[currentDay] != undefined) {
+      tooltip += `${props[currentDay]}% fully vaccinated`;
+    } else {
+      tooltip += 'No data available'
+    }
+    // bind tooltip to layer
+    layer.bindTooltip(tooltip, {
+      sticky: false,
+    });
+  });
+} // end updateMap()
+
+2) CREATING A TOOLTIP THAT SHOWS CHANGE IN VACCINATION OVER TIME, INSTEAD OF SUMMARY OF CURRENT DATA

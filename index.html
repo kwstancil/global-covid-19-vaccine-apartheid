@@ -57,8 +57,9 @@
               For a snapshot of inoculation trends in a given country, hover over the map.
             </p>
             <p>
-              Click the dropdown menu to explore WTO members' positions on a proposed intellectual property waiver first
-              introduced by India and South Africa on October 2, 2020, when the pandemic death toll had just surpassed 1 million.
+              Click the dropdown menu to discern whether WTO members support or oppose a temporary suspension of certain intellectual property rules
+              to boost the global supply of jabs, tests, and treatments—first proposed by India and South Africa on October 2, 2020, when the pandemic death toll
+              had just surpassed 1 million—and to explore where untapped vaccine production potential exists.
             </p>
             <p>
             <u>Background</u>
@@ -68,10 +69,12 @@
             <p>
             <u>Sources</u>
             <br>
-            Vaccination rates came courtesy of <a href='https://github.com/owid/covid-19-data/tree/master/public/data' target="blank"> Our World in Data</a> - see Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021);
-            Information about whether governments support or oppose the TRIPS waiver proposal was supplied by <a href='https://msfaccess.org/no-patents-no-monopolies-pandemic' target="blank"> Doctors Without Borders</a>;
-            Finally, <a href='https://www.naturalearthdata.com/downloads/50m-cultural-vectors/' target="blank">Natural Earth</a> provided national boundaries
-            and <a href='https://gavinr.com/open-data/world-countries-centroids/' target="blank">Gavin Rehkemper</a> provided country centroids.
+            <a href='https://github.com/owid/covid-19-data/tree/master/public/data' target="blank"> Vaccination rates</a> came courtesy of Our World in Data
+            - see Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021); Information about whether
+            governments <a href='https://msfaccess.org/no-patents-no-monopolies-pandemic' target="blank"> support or oppose the TRIPS waiver proposal</a> supplied by Doctors Without Borders;
+            Data on <a href='https://www.hrw.org/news/2021/12/15/experts-identify-100-plus-firms-make-covid-19-mrna-vaccines' target="blank"> untapped vaccine production potential</a>
+            compiled by Doctors Without Borders and the AccessIBSA project. <a href='https://www.naturalearthdata.com/downloads/50m-cultural-vectors/' target="blank">National boundaries</a>
+            and <a href='https://gavinr.com/open-data/world-countries-centroids/' target="blank">country centroids</a> provided by Natural Earth and Gavin Rehkemper, respectively.
           </p>
         </section>
       </aside>
@@ -98,20 +101,27 @@
       integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
       crossorigin="">
     </script>
-    <!-- then Papa Parse -->
+
+    <!-- then Papa Parse
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"
       integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer">
     </script>
-    <!-- then Chroma -->
+
+    then Chroma
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.2/chroma.min.js"
       integrity="sha512-8TVPS0EFkkmtT6yPb5K4csnSt3tjbKRrs0F8gvTNKv2OxOcwDO7+Klkz86gMVrzfqtZos5N2a+k+r9D+hlccmQ=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer">
-    </script>
+    </script> -->
+
+    <!-- then Simple Statistics -->
+	   <script
+     src='https://unpkg.com/simple-statistics@7.7.0/dist/simple-statistics.min.js'>
+   </script>
     <!-- then D3 -->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.1.1/d3.min.js"
@@ -119,6 +129,8 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer">
     </script>
+    <!-- then Topojson -->
+    <script src="https://unpkg.com/topojson@3"></script>
     <!-- then app.js -->
     <script src ="js/app.js"></script>
 
@@ -145,92 +157,29 @@
       }
     ).addTo(map);
 
+    // set global variable for map
+    const normValue = "people_fully_vaccinated_per_hundred";
+
     // AJAX request for GeoJSON data
-    fetch("data/nation_states.json")
+    fetch("data/owid_covid_latest.json")
+      // after it is returned...
       .then(function (response) {
-        return response.json();
+        // if has a property called ok, and it is true
+        if (response.ok) {
+          // The API call was successful!
+          // Parse the JSON into a useable format, then return it
+          return response.json();
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
       })
-      .then(function (nations) {
-        console.log(nations);
-
-        Papa.parse('data/owid_covid_data.csv', {
-          download: true,
-          header: true,
-          complete: function(data) {
-
-            // data is accessible to us here
-            console.log('data: ', data);
-
-            // note that nations is also accessible here
-            console.log('nations: ', nations);
-
-            // create function to join data and nations
-            processData(nations, data);
-            }
-          }); // end of Papa.parse()
-        })
-        .catch(function (error) {
-          console.log(`Ruh roh! An error has occurred`, error);
-        });
-
-    function processData(nations, data) {
-
-      // loop through the json
-      for (var nation in nations.features) {
-
-        var props = nations.features[nation].properties;
-
-        //loop through csv data for each nation
-        for (var d in data.data) {
-
-          if (props.SOV_A3 == data.data[d].iso_code) { //  if the country name in the geojson matches the country name in the csv
-            nations.features[nation].properties = data.data[d]; // add csv data to json feature's properties
-            break;
-          }
-        }
-      }
-
-      // create empty array to store all the data values
-      const rates = [];
-      const t = {}
-      // iterate through all the counties
-      nations.features.forEach(function(nation) {
-
-        // iterate through all the props of each nation
-        for (const prop in nation.properties) {
-
-          // if the attribute is a number and not the country name
-          if (prop != "SOV_A3" && prop != "iso_code")  {
-
-            if (nation.properties[prop] != null){
-
-            // push that attribute value into the array
-            rates.push(Number(nation.properties[prop]));
-            }
-          }
-        }
+      // The returned response is now data in a new then method
+      .then(function (data) {
+        // This is the JSON from our response
+        console.log(data);
+        // Pass the data to the drawMap function
+        drawMap(data);
       });
-
-      // verify the results
-      console.log(t,rates.sort((a,b) => b - a));
-
-      // create class breaks
-      var breaks = chroma.limits(rates, 'q', 5);
-
-      // create color generator function
-      var colorize = chroma.scale(chroma.brewer.OrRd)
-          .classes(breaks)
-          .mode('lab');
-
-      console.log(colorize) // function (a){var b; return b=s(u(a)), m&&b[m]?b[m]():b}
-
-      // call to draw the map
-      drawMap(nations, colorize);
-
-      // call to draw the legend
-      drawLegend(breaks, colorize);
-
-    } // end processData()
 
     function drawMap(nations, colorize) {
 
@@ -291,11 +240,11 @@
         let tooltip = ''
         if (props.ADMIN) {
           // build the tooltip
-        tooltip = `<b>${props['NAME']} County</b><br />`
+        tooltip = `<b>${props['NAME']}</b><br />`
         }
 
-        if (props[currentDay] != 'null' && props[currentYear] != undefined) {
-          tooltip += `${props[currentYear]}% Unemployment`;
+        if (props[currentDay] != 'null' && props[currentDay] != undefined) {
+          tooltip += `${props[currentDay]}% fully vaccinated`;
         } else {
           tooltip += 'No data available'
         }
