@@ -89,6 +89,13 @@
     </footer>
     </div>
 
+    <div class="bg-secondary py-2 px-3 ml-3 mt-3 text-white" id="legend"></div>
+
+    <div class="form-group mr-3 mt-3" id="dropdown-ui">
+		    <select class="form-select bg-success text-white">
+        </select>
+    </div>
+
     <!-- Add Bootstrap -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
@@ -298,6 +305,35 @@
 		    return "#045a8d";
       }
 		} // end getColor
+
+    // Add legend to map
+    function addLegend(breaks) {
+      // check console to verify breaks array
+      console.log(breaks);
+
+        // create a new Leaflet control object, and position it top left
+        const legendControl = L.control({ position: "bottomright" });
+
+        // when the legend is added to the map
+        legendControl.onAdd = function () {
+          // select a div element with an id attribute of legend
+          const legend = L.DomUtil.get("legend");
+
+          // disable scroll and click/touch on map when on legend
+          L.DomEvent.disableScrollPropagation(legend);
+          L.DomEvent.disableClickPropagation(legend);
+
+          // return the selection to the method
+          return legend;
+        };
+
+        // add the empty legend div to the map
+  		   legendControl.addTo(map);
+				updateLegend(breaks);
+
+    } //end addLegend
+
+    
 
     </script>
   </body>

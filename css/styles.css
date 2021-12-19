@@ -12,6 +12,10 @@
   width: 160px;
 }
 
+  .leaflet-container {
+			font-family: 'Open Sans', sans-serif;
+	}
+
   .legend h3 {
     font-size: 1.1em;
     font-weight: bold;
