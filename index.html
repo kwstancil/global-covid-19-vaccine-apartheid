@@ -158,10 +158,10 @@
     ).addTo(map);
 
     // set global variable for map
-    const normValue = "owid_latest_covid_people_fully_vaccinated_per_hundred";
+    const normValue = "owid_covid_latest_people_fully_vaccinated_per_hundred";
 
     // AJAX request for GeoJSON data
-    fetch("data/vaccination_rate.geojson")
+    fetch("data/vaccination_rate.json")
       // after it is returned...
       .then(function (response) {
         // if has a property called ok, and it is true
@@ -254,37 +254,76 @@
 
       } // end drawMap()
 
-      function updateMap(dataLayer, colorize, currentDay) {
+    function updateMap(vaxrate) {
+      // get the class breaks for the current data attribute
+			const breaks = getClassBreaks(vaxrate);
 
-      // loop through each nation layer to update the color
-      dataLayer.eachLayer(function (layer) {
+			// loop through each vaxrate layer to update the color and tooltip info
+			vaxrate.eachLayer(function (layer) {
+				const props = layer.feature.properties;
 
-        // refer to properties
-        const props = layer.feature.properties;
+				// set the fill color of layer based on its normalized data value
+				layer.setStyle({
+					fillColor: getColor(props[normValue], breaks),
+				});
 
-        // update layer color based on timestamp
-        layer.setStyle({
-          fillColor: colorize(Number(props[currentDay]))
-        });
+				// assemble string sequence of info for tooltip (end line break with + operator)
+				let tooltipInfo = `<b>${props["ADMIN"]}</b></br>
+				${(props[normValue]).toLocaleString()}%`;
 
-        let tooltip = ''
-        if (props.ADMIN) {
-          // build the tooltip
-        tooltip = `<b>${props['NAME']}</b><br />`
-        }
+				// bind a tooltip to layer with country-specific information
+			  layer.bindTooltip(tooltipInfo, {
+				 // sticky property so tooltip follows the mouse
+				 sticky: true,
+			  });
+			});
 
-        if (props[currentDay] != 'null' && props[currentDay] != undefined) {
-          tooltip += `${props[currentDay]}% fully vaccinated`;
-        } else {
-          tooltip += 'No data available'
-        }
-        // bind tooltip to layer
-        layer.bindTooltip(tooltip, {
-          sticky: false,
-        });
-      });
-    } // end updateMap()
+      // update the legend with the current data attribute information
+		  addLegend(breaks);
+		} // end updateMap
 
+    // Get class breaks in data
+		function getClassBreaks(vaxrate) {
+  		// create empty Array for storing values
+  		const values = [];
+
+  		// loop through all the counties
+  		vaxrate.eachLayer(function (layer) {
+    		let value =
+      		layer.feature.properties[normValue];
+    		values.push(value); // push the normalized value for each layer into the Array
+  		});
+
+  		// determine similar clusters
+  		const clusters = ss.ckmeans(values, 5);
+
+  		// create an array of the lowest value within each cluster
+  		const breaks = clusters.map(function (cluster) {
+    		return [cluster[0], cluster.pop()];
+  		});
+
+  		//return array of arrays, e.g., [[0.24,0.25], [0.26, 0.37], etc]
+  		return breaks;
+		} // end getClassBreaks
+
+    // Get color of county
+		function getColor(d, breaks) {
+		  // function accepts a single normalized data attribute value
+		  // and uses a series of conditional statements to determine which
+		  // which color value to return to return to the function caller
+
+		  if (d <= breaks[0][1]) {
+		    return "#f1eef6";
+		  } else if (d <= breaks[1][1]) {
+		    return "#bdc9e1";
+		  } else if (d <= breaks[2][1]) {
+		    return "#74a9cf";
+		  } else if (d <= breaks[3][1]) {
+		    return "#2b8cbe";
+		  } else if (d <= breaks[3][1]) {
+		    return "#045a8d";
+      }
+		} // end getColor
 
     </script>
   </body>
