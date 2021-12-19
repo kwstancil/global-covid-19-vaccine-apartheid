@@ -245,11 +245,13 @@
         if (props[normValue] != 'null') {
           tooltip += `${(props[normValue])}% fully inoculated<br />
           ${(props["owid_covid_latest_people_vaccinated_per_hundred"])}% partially inoculated<br />
-          ${(props["owid_covid_latest_total_boosters_per_hundred"])} booster shots administered per 100 people`
+          ${(props["owid_covid_latest_total_boosters_per_hundred"])} booster shots administered per 100 people`;
+        } else {
+          tooltip += 'No data available'
         }
 
 				// bind tooltip to layer
-			  layer.bindTooltip(tooltipInfo, {
+			  layer.bindTooltip(tooltip, {
 				 // sticky property so tooltip follows the mouse
 				 sticky: true,
 			  });
@@ -334,7 +336,7 @@
     function updateLegend(breaks) {
 			// select the legend, add a title, begin an unordered list and assign to a variable
 			const legend = document.querySelector("#legend")
-			legend.innerHTML = `<b><u>Share of population fully vaccinated`
+			legend.innerHTML = `<b><u>${"Share of population fully vaccinated"}</b></u><br />`
 
 			// loop through the Array of classification break values
 			for (let i = 0; i <= breaks.length - 1; i++) {
