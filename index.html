@@ -35,49 +35,50 @@
 
   <body>
     <div class="container-fluid">
-
       <header class="row py-2 bg-dark text-white" id="header">
         <h1>Global Covid-19 Vaccine Apartheid</h1>
       </header>
 
-      <div class="row">
-        <div id="content" class="col-md-4 py-2 overflow-scroll">
-        <h1>A Deadly 'Pathology of Power'</h1>
-          <p>
-          <u>How to use this visualization</u>
-          <br>
-          Drag the slider to see how national vaccination rates have changed over time.
-          For a snapshot of inoculation trends in a given country, hover over the map.
-          </p>
-          <p>
-          Click the dropdown menu to explore WTO members' positions on a proposed intellectual property waiver first
-          introduced by India and South Africa on October 2, 2020, when the pandemic death toll had just surpassed 1 million.
-          </p>
-          <p>
-          <u>Background</u>
-          <br>
-          Will add more later
-          </p>
-          <p>
-          <u>Sources</u>
-          <br>
-          Vaccination rates came courtesy of <a href='https://github.com/owid/covid-19-data/tree/master/public/data' target="blank"> Our World in Data</a> - see Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021);
-          Information about whether governments support or oppose the TRIPS waiver proposal was supplied by <a href='https://msfaccess.org/no-patents-no-monopolies-pandemic' target="blank"> Doctors Without Borders</a>;
-          Finally, <a href='https://www.naturalearthdata.com/downloads/50m-cultural-vectors/' target="blank">Natural Earth</a> provided national boundaries
-          and <a href='https://gavinr.com/open-data/world-countries-centroids/' target="blank">Gavin Rehkemper</a> provided country centroids.
-          </p>
-        </div>
+    <div class="row">
+      <div id="content" class="col-md-4 py-2 overflow-scroll">
+      <h1>A Deadly 'Pathology of Power'</h1>
+        <p>
+        <u>How to use this visualization</u>
+        <br>
+        Drag the slider to see how national vaccination rates have changed over time.
+        For a snapshot of inoculation trends in a given country, hover over the map.
+        </p>
+        <p>
+        Click the dropdown menu to explore WTO members' positions on a proposed intellectual property waiver first
+        introduced by India and South Africa on October 2, 2020, when the pandemic death toll had just surpassed 1 million.
+        </p>
+        <p>
+        <u>Background</u>
+        <br>
+        Will add more later
+        </p>
+        <p>
+        <u>Sources</u>
+        <br>
+        Vaccination rates came courtesy of <a href='https://github.com/owid/covid-19-data/tree/master/public/data' target="blank"> Our World in Data</a> - see Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021);
+        Information about whether governments support or oppose the TRIPS waiver proposal was supplied by <a href='https://msfaccess.org/no-patents-no-monopolies-pandemic' target="blank"> Doctors Without Borders</a>;
+        Finally, <a href='https://www.naturalearthdata.com/downloads/50m-cultural-vectors/' target="blank">Natural Earth</a> provided national boundaries
+        and <a href='https://gavinr.com/open-data/world-countries-centroids/' target="blank">Gavin Rehkemper</a> provided country centroids.
+        </p>
+      </div>
+
 
         <div class="col-md-9 p-0">
           <div id="map"></div>
 
-          <div id="slider">
+          <!-- <div id="slider">
             <label><span class="min">Dec 2020</span><span class="max">Present</span>
 
             </label>
 
-          </div>
+          </div> -->
         </div>
+
       </div>
 
       <footer class="footer fixed-bottom bg-dark" id="footer">
@@ -115,23 +116,15 @@
       referrerpolicy="no-referrer">
     </script>
 
-    <script src="https://d3js.org/d3.v7.js"></script>
-
-    <script src="https://unpkg.com/topojson@3"></script>
-
     <script src ="js/app.js"></script>
 
     <script>
-      // map options
-      const options = {
-        scrollWheelZoom: true,
-        zoomSnap: 0.1,
-        dragging: true,
-        zoomControl: false,
-        // center: [39.6, -94.46],
-        // zoom: 4,
-        // Manually set zoom and center to avoid map spanning the world
-        // or set bounds on a predefined extent, map.fitBounds([[40, -100], [-40, -70]])
+    // map options
+    const options = {
+      scrollWheelZoom: true,
+      zoomSnap: 0.1,
+      dragging: true,
+      zoomControl: false,
       };
 
       // create the Leaflet map
@@ -218,9 +211,7 @@
             console.log(t,rates.sort((a,b) => b - a));
 
 
-
-    } // end processData()
-
+      } // end processData()
 
     </script>
   </body>
