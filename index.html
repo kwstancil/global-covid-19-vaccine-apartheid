@@ -91,11 +91,6 @@
 
     <div class="bg-secondary py-2 px-3 ml-3 mt-3 text-white" id="legend"></div>
 
-    <div class="form-group mr-3 mt-3" id="dropdown-ui">
-		    <select class="form-select bg-success text-white">
-        </select>
-    </div>
-
     <!-- Add Bootstrap -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
@@ -260,6 +255,9 @@
 			  });
 			});
 
+      // update the legend with the current data attribute information
+			addLegend(breaks);
+
 		} // end updateMap
 
     // Get class breaks in data
@@ -312,7 +310,7 @@
       console.log(breaks);
 
         // create a new Leaflet control object, and position it top left
-        const legendControl = L.control({ position: "bottomright" });
+        const legendControl = L.control({ position: "bottomleft"});
 
         // when the legend is added to the map
         legendControl.onAdd = function () {
@@ -328,12 +326,27 @@
         };
 
         // add the empty legend div to the map
-  		   legendControl.addTo(map);
+  		  legendControl.addTo(map);
 				updateLegend(breaks);
 
     } //end addLegend
 
-    
+    function updateLegend(breaks) {
+			// select the legend, add a title, begin an unordered list and assign to a variable
+			const legend = document.querySelector("#legend")
+			legend.innerHTML = `<b><u>Share of population fully vaccinated`
+
+			// loop through the Array of classification break values
+			for (let i = 0; i <= breaks.length - 1; i++) {
+				let color = getColor(breaks[i][0], breaks);
+
+				legend.innerHTML +=
+					`<div><span style="background:${color}"></span>
+					<label>${(breaks[i][0])}% &mdash;
+					${(breaks[i][1])}%</label></div>`
+			}
+		}
+
 
     </script>
   </body>
