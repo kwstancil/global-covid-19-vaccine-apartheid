@@ -48,13 +48,12 @@
       </div>
       <aside id="about"
         class="col-md-4 col-lg-4 col-xl-4 order-md-1 text-black py-2 pl-4 overflow-auto">
-          <section>
-            <h1>A Deadly 'Pathology of Power'</h1>
-              <p>
+        <section>
+          <h1>A Deadly 'Pathology of Power'</h1>
+            <p>
               <u>How to use this visualization</u>
               <br>
-              Drag the slider to see how national vaccination rates have changed over time.
-              For a snapshot of inoculation trends in a given country, hover over the map.
+              Hover over the map to see a snapshot of vaccination trends.
             </p>
             <p>
               Click the dropdown menu to discern whether WTO members support or oppose a temporary suspension of certain intellectual property rules
@@ -62,20 +61,20 @@
               had just surpassed 1 million—and to explore where untapped vaccine production potential exists.
             </p>
             <p>
-            <u>Background</u>
-            <br>
-            Will add more later
+              <u>Background</u>
+              <br>
+              Will add more later
             </p>
             <p>
-            <u>Sources</u>
-            <br>
-            <a href='https://github.com/owid/covid-19-data/tree/master/public/data' target="blank"> Vaccination rates</a> came courtesy of Our World in Data
-            - see Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021); Information about whether
-            governments <a href='https://msfaccess.org/no-patents-no-monopolies-pandemic' target="blank"> support or oppose the TRIPS waiver proposal</a> supplied by Doctors Without Borders;
-            Data on <a href='https://www.hrw.org/news/2021/12/15/experts-identify-100-plus-firms-make-covid-19-mrna-vaccines' target="blank"> untapped vaccine production potential</a>
-            compiled by Doctors Without Borders and the AccessIBSA project. <a href='https://www.naturalearthdata.com/downloads/50m-cultural-vectors/' target="blank">National boundaries</a>
-            and <a href='https://gavinr.com/open-data/world-countries-centroids/' target="blank">country centroids</a> provided by Natural Earth and Gavin Rehkemper, respectively.
-          </p>
+              <u>Sources</u>
+              <br>
+              <a href='https://github.com/owid/covid-19-data/tree/master/public/data' target="blank"> Vaccination rates</a> came courtesy of Our World in Data
+              - see Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021); Information about whether
+              governments <a href='https://msfaccess.org/no-patents-no-monopolies-pandemic' target="blank"> support or oppose the TRIPS waiver proposal</a> supplied by Doctors Without Borders;
+              Data on <a href='https://www.hrw.org/news/2021/12/15/experts-identify-100-plus-firms-make-covid-19-mrna-vaccines' target="blank"> untapped vaccine production potential</a>
+              compiled by Doctors Without Borders and the AccessIBSA project. <a href='https://www.naturalearthdata.com/downloads/50m-cultural-vectors/' target="blank">National boundaries</a>
+              and <a href='https://gavinr.com/open-data/world-countries-centroids/' target="blank">country centroids</a> provided by Natural Earth and Gavin Rehkemper, respectively.
+            </p>
         </section>
       </aside>
     </section>
@@ -180,13 +179,16 @@
     // set global variable for map
     const normValue = "owid_covid_latest_people_fully_vaccinated_per_hundred";
 
-    const vacRate = fetch('data/vaccination_rate.json')
+    const vaxRate = fetch('data/vaccination_rate.json')
       .then(response => response.json())
-      
+
+    const tripsWaiver = fetch('data/support_trips_waiver.geojson')
+      .then(response => response.json())
+
     const idleProd = fetch('data/idle_production_capacity.geojson')
       .then(response => response.json())
 
-    Promise.all([vacRate, idleProd])
+    Promise.all([vaxRate, tripsWaiver, idleProd])
       .then(responses => {
         console.log(responses)
         drawMap(responses);
@@ -215,9 +217,9 @@
 
     function drawMap(data) {
 
-      let [vaxRate, idleProd] = data; // alt syntax to destructure an array
+      let [vaxRate, tripsWaiver, idleProd] = data; // alt syntax to destructure an array
 
-      console.log(vaxRate, idleProd, data)
+      console.log(vaxRate, tripsWaiver, idleProd, data)
 
       // Use Leaflet's L.geoJson() method to convert our GeoJSON data into a Leaflet object
       const vaxrate = L.geoJson(vaxRate, {
@@ -252,11 +254,32 @@
         },
       }).addTo(map);
 
+      const tripswaiver = L.geoJson(tripsWaiver, {
+      //  if (properties.TRIPS_WAIVER = 0) {
+      //      return '#FF0000';
+      //    }
+      //    if (properties.TRIPS_WAIVER = 1) {
+      //      return '#008a19';
+      //    }
+      //    if (properties.TRIPS_WAIVER == 2) {
+      //      return '#fff82e';
+      //    }
+      //    if (properties.TRIPS_WAIVER == null) {
+      //      return 'none';
+      //    }
+      })
+
       const idleprod = L.geoJson(idleProd, {
         // filter and style for capacity
       })
 
       const ui = document.querySelector("#ui");
+
+      ui.addEventListener("click", function (e) {
+        // Either make a button for a single click
+        // or use a dropdown menu for multiple options
+        tripswaiver.addTo(map)
+      })
 
       ui.addEventListener("click", function (e) {
         // Either make a button for a single click
