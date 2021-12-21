@@ -180,6 +180,18 @@
     // set global variable for map
     const normValue = "owid_covid_latest_people_fully_vaccinated_per_hundred";
 
+    const vacRate = fetch('data/vaccination_rate.json')
+      .then(response => response.json())
+      
+    const idleProd = fetch('data/idle_production_capacity.geojson')
+      .then(response => response.json())
+
+    Promise.all([vacRate, idleProd])
+      .then(responses => {
+        console.log(responses)
+        drawMap(responses);
+      })
+
     // AJAX request for GeoJSON data
     fetch('data/vaccination_rate.json')
       // after it is returned...
@@ -198,13 +210,17 @@
         // This is the JSON from our response
         console.log(data);
         // Pass the data to the drawMap function
-        drawMap(data);
+        // drawMap(data);
       });
 
     function drawMap(data) {
 
+      let [vaxRate, idleProd] = data; // alt syntax to destructure an array
+
+      console.log(vaxRate, idleProd, data)
+
       // Use Leaflet's L.geoJson() method to convert our GeoJSON data into a Leaflet object
-      const vaxrate = L.geoJson(data, {
+      const vaxrate = L.geoJson(vaxRate, {
         // style nations with initial default path options
         style: function (feature) {
           return {
@@ -235,6 +251,18 @@
           });
         },
       }).addTo(map);
+
+      const idleprod = L.geoJson(idleProd, {
+        // filter and style for capacity
+      })
+
+      const ui = document.querySelector("#ui");
+
+      ui.addEventListener("click", function (e) {
+        // Either make a button for a single click
+        // or use a dropdown menu for multiple options
+        idleprod.addTo(map)
+      })
 
         updateMap(vaxrate);
 
