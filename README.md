@@ -1,18 +1,19 @@
 # global-covid-19-vaccine-apartheid
-Background: This <a href='https://kwstancil.github.io/global-covid-19-vaccine-apartheid' target="blank"> map</a> depicts unequal access to Covid-19 vaccines around the world. It also highlights whether
-governments support or oppose an initiative to suspend certain intellectual property restrictions
-for the duration of the pandemic to boost the production of jabs, tests, and treatments.
-Big Pharma has tried to defend its extremely profitable IP monopolies by claiming that waiving
-patents won't lead to an increase in the global supply of lifesaving medical tools because generic
-drug manufacturers in the Global South lack the capacity to replicate the mRNA manufacturing
-process, but that talking point has been debunked numerous times. New data, represented in this
-map, show that 120 firms in Africa, Asia, and Latin America stand ready to make billions of doses
-of Covid-19 vaccines if Pfizer, Moderna, and other pharmaceutical corporations were compelled to
-share recipes and technology, which wouldn't exist in the first place without billions of dollars
-in public support, including years of taxpayer-funded research.
+Background: This <a href='https://kwstancil.github.io/global-covid-19-vaccine-apartheid' target="blank"> map</a> depicts unequal access to Covid-19 vaccines around the world. Although dose hoarding by wealthy nations has been a major problem, the root cause of the injustice that many have labeled vaccine apartheid is knowledge hoarding by pharmaceutical corporations. For that reason, this map highlights whether governments support or oppose an initiative to suspend certain intellectual property restrictions for the duration of the pandemic to boost the production of jabs, tests, and treatments. Big Pharma has tried to defend its extremely profitable IP monopolies by claiming that waiving patents won't lead to an increase in the global supply of lifesaving medical tools because generic drug manufacturers in the Global South lack the capacity to replicate the mRNA manufacturing process, but that talking point has been debunked numerous times. New data, represented in this
+map, show that 120 firms in Africa, Asia, and Latin America stand ready to make billions of doses of Covid-19 vaccines if Pfizer, Moderna, and other pharmaceutical corporations were compelled to share recipes and technology, which wouldn't exist in the first place without billions of dollars in public support, including years of taxpayer-funded research.
 
 Sources: <a href='https://github.com/owid/covid-19-data/tree/master/public/data' target="blank"> Vaccination rates</a> came courtesy of Our World in Data - see Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021); Information about whether governments <a href='https://msfaccess.org/no-patents-no-monopolies-pandemic' target="blank"> support or oppose the TRIPS waiver proposal</a> supplied by Doctors Without Borders; Data on <a href='https://www.hrw.org/news/2021/12/15/experts-identify-100-plus-firms-make-covid-19-mrna-vaccines' target="blank"> untapped vaccine production potential</a> compiled by Doctors Without Borders and the AccessIBSA project. <a href='https://www.naturalearthdata.com/downloads/50m-cultural-vectors/' target="blank">National boundaries</a> and <a href='https://gavinr.com/open-data/world-countries-centroids/' target="blank">country centroids</a> provided by Natural Earth and Gavin Rehkemper, respectively.
 
-Technology/Methodology: More
+Methodology/Technology: I created a choropleth map that includes an informative tooltip to represent national vaccination rates. I also created a dropdown menu that allows users to toggle between point layers symbolizing governments' positions on the TRIPS waiver. Opposition to the proposal looks especially egregious when contrasted with the layer depicting untapped vaccine production capacity.
 
-To-do: 
+I used QGIS to process and transform data from .csv format to GeoJSON files. The map is generated using Leaflet and exists within a Bootstrap framework.
+
+To-do: I consider this a work-in-progress.
+
+First, I am working to reposition the dropdown element, which is currently hidden at the bottom of the page.
+
+Second, the point layers can be represented more effectively. That includes creating an option called "All positions" so that a user can see where all 164 WTO members stand with respect to the TRIPS waiver. I also need to prevent those points from being hidden behind the choropleth map anytime a user hovers over the map to see vaccine stats. Finally, the "idle mRNA manufacturing capacity" layer is not symbolized correctly. Currently, a user sees equally sized purple dots in the countries where there are factories that have the potential to produce vaccines if Big Pharma were forced to share its know-how and tech. However, I need to develop a method to show the relative quantity in each country (e.g., India has 55, China 34, S. Korea 9, etc.). Perhaps I could use graduated circles, but I was also thinking that a good way to show proportionality would be create differently sized bars. I would want those to stay on the map with the TRIPS waiver layers. I would also like for the graduated circles/bars to be accompanied by a tooltip with summary stats/photos.
+
+Third, the massive gap in vaccination rates between rich and poor countries is even more grotesque when one sees how it has unfolded over time. Although most African countries are still being left behind, other low-income nations in Asia and Latin America are catching up, making my snapshot on 12/18 (owid_covid_latest.csv) less stark than the situation was one, two, etc. months ago. I want to include a slider widget at the bottom of the map, which a user can drag to see how global vaccination patterns have changed over time. Our World in Data provides the information that makes this possible (owid_covid_data.csv), which would also enable me to have a self-updating choropleth map, but I'm still trying to figure out how to accomplish this.
+
+Fourth, I must have used a less-than-ideal column to join vaccination rate data to nation-states, because if you hover over France, some of its overseas colonies are highlighted. I need to address this problem. I'm also wondering if it might be worthwhile to show users a sparkline depicting inoculation trends over time at the national scale when they hover over a country, as Our World in Data does.
