@@ -97,8 +97,7 @@
         <a id="addContent1">Supports TRIPS waiver</a>
         <a id="addContent2">Opposes TRIPS waiver</a>
         <a id="addContent3">Unknown position on TRIPS waiver</a>
-        <a id="addContent4">All positions</a>
-        <a id="addContent5">Idle mRNA manufacturing capacity</a>
+        <a id="addContent4">Idle mRNA manufacturing capacity</a>
       </div>
     </div>
 
@@ -248,37 +247,79 @@
         },
       }).addTo(map);
 
-      const yeswaiver = L.geoJson(tripsWaiver, {
-        // filter and style for waiver
-      })
-
-      const nowaiver = L.geoJson(tripsWaiver, {
-        // filter and style for waiver
-      })
-
-      const unknownwaiver = L.geoJson(tripsWaiver, {
-        // filter and style for waiver
-      })
-
-      const allwaiver = L.geoJson(tripsWaiver, {
-        // filter and style for waiver
-      })
-
-      const idleprod = L.geoJson(idleProd, {
-        // filter and style for capacity
-      })
-
       // create empty feature group to contain layers added by dropdown menu clicks
       const mapLayers = L.featureGroup().addTo(map);
 
+      const yesWaiver = L.geoJson(tripsWaiver, {
+
+        pointToLayer: function(feature, latlng) {
+
+          const waiverProp = feature.properties.TRIPS_WAIVER;
+
+          if(waiverProp == 1) {
+            return new L.CircleMarker(latlng, {
+              radius: 5,
+              fillOpacity: 1,
+              color: "#006913"
+            });
+          }
+        }
+      });
+
+      const noWaiver = L.geoJson(tripsWaiver, {
+
+        pointToLayer: function(feature, latlng) {
+
+          const waiverProp = feature.properties.TRIPS_WAIVER;
+
+          if(waiverProp == 0) {
+            return new L.CircleMarker(latlng, {
+              radius: 5,
+              fillOpacity: 1,
+              color: "#db0909"
+            });
+          }
+        }
+      });
+
+      const unknownWaiver = L.geoJson(tripsWaiver, {
+
+        pointToLayer: function(feature, latlng) {
+
+          const waiverProp = feature.properties.TRIPS_WAIVER;
+
+          if(waiverProp == 2) {
+            return new L.CircleMarker(latlng, {
+              radius: 5,
+              fillOpacity: 1,
+              color: "#f7eb40"
+            });
+          }
+        }
+      });
+
+      const vaxFactories = L.geoJson(idleProd, {
+
+        pointToLayer: function(feature, latlng) {
+
+          const prodProp = feature.properties.FACTORIES;
+
+          if(prodProp != null) {
+            return new L.CircleMarker(latlng, {
+              radius: 5,
+              fillOpacity: 1,
+              color: "#a72afa"
+            });
+          }
+        }
+      });
+
       // define dropdown menu items by their id values
       const ui = document.querySelector("#ui");
-
       const addContent1 = document.querySelector("#addContent1");
       const addContent2 = document.querySelector("#addContent2");
       const addContent3 = document.querySelector("#addContent3");
       const addContent4 = document.querySelector("#addContent4");
-      const addContent5 = document.querySelector("#addContent5");
 
       // define what happens when a user clicks on dropdown menu items
       ui.addEventListener("click", function (e) {
@@ -290,7 +331,7 @@
         // remove all layers from mapLayers
         mapLayers.clearLayers();
         // then add the selected layer
-        mapLayers.addLayer(yeswaiver);
+        mapLayers.addLayer(yesWaiver);
   		});
 
       // opposes TRIPS wavier
@@ -298,7 +339,7 @@
         // remove all layers from mapLayers
         mapLayers.clearLayers();
         // then add the selected layer
-        mapLayers.addLayer(nowaiver);
+        mapLayers.addLayer(noWaiver);
   		});
 
       // unknown position on TRIPS wavier
@@ -306,24 +347,28 @@
         // remove all layers from mapLayers
         mapLayers.clearLayers();
         // then add the selected layer
-        mapLayers.addLayer(unknownwaiver);
+        mapLayers.addLayer(unknownWaiver);
   		});
 
-      // all positions on TRIPS wavier
+      // idle mRNA manufacturing capacity
       addContent4.addEventListener("click", function (e) {
         // remove all layers from mapLayers
         mapLayers.clearLayers();
         // then add the selected layer
-        mapLayers.addLayer(yeswaiver, nowaiver, unknownwaiver);
+        mapLayers.addLayer(vaxFactories);
   		});
 
-      // idle mRNA manufacturing capacity
-      addContent5.addEventListener("click", function (e) {
-        // remove all layers from mapLayers
-        mapLayers.clearLayers();
-        // then add the selected layer
-        mapLayers.addLayer(idleprod);
-  		});
+      //const factoryProp = feature.properties.FACTORIES
+
+      //  let tooltipFactories = ''
+      //    if (factoryProp.ADMIN) {
+            //build the tooltip
+      //      tooltip = `<b>${props['ADMIN']}</b><br />`
+      //    }
+
+      //    if (factoryProp[FACTORIES] != 'null') {
+      //      tooltip += `${(factoryProp[FACTORIES])} factories with the potential to make mRNA vaccines<br />`
+      //    };
 
         updateMap(vaxrate);
 
