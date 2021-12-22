@@ -88,24 +88,18 @@
     </footer>
     </div>
 
+    <!-- create legend -->
     <div class="bg-secondary py-2 px-3 ml-3 mt-3 text-white" id="legend"></div>
-
+    <!-- create dropdown -->
     <div id="ui" class="dropdown">
-      <a
-        class="btn btn-secondary dropdown-toggle"
-        href="#"
-        role="button"
-        id="dropdownMenuLink"
-        data-bs-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
-        Sharing knowledge or hoarding it?
-      </a>
-      <div
-        class="dropdown-menu"
-        aria-labelledby="dropdownMenuLink"
-      ></div>
+      <button class="btn btn-secondary dropdown-toggle">Sharing knowledge or hoarding it?</button>
+      <div id="myDropdown" class="dropdown-content">
+        <a id="addContent1">Supports TRIPS waiver</a>
+        <a id="addContent2">Opposes TRIPS waiver</a>
+        <a id="addContent3">Unknown position on TRIPS waiver</a>
+        <a id="addContent4">All positions</a>
+        <a id="addContent5">Idle mRNA manufacturing capacity</a>
+      </div>
     </div>
 
     <!-- Add Bootstrap -->
@@ -254,38 +248,82 @@
         },
       }).addTo(map);
 
-      const tripswaiver = L.geoJson(tripsWaiver, {
-      //  if (properties.TRIPS_WAIVER = 0) {
-      //      return '#FF0000';
-      //    }
-      //    if (properties.TRIPS_WAIVER = 1) {
-      //      return '#008a19';
-      //    }
-      //    if (properties.TRIPS_WAIVER == 2) {
-      //      return '#fff82e';
-      //    }
-      //    if (properties.TRIPS_WAIVER == null) {
-      //      return 'none';
-      //    }
+      const yeswaiver = L.geoJson(tripsWaiver, {
+        // filter and style for waiver
+      })
+
+      const nowaiver = L.geoJson(tripsWaiver, {
+        // filter and style for waiver
+      })
+
+      const unknownwaiver = L.geoJson(tripsWaiver, {
+        // filter and style for waiver
+      })
+
+      const allwaiver = L.geoJson(tripsWaiver, {
+        // filter and style for waiver
       })
 
       const idleprod = L.geoJson(idleProd, {
         // filter and style for capacity
       })
 
+      // create empty feature group to contain layers added by dropdown menu clicks
+      const mapLayers = L.featureGroup().addTo(map);
+
+      // define dropdown menu items by their id values
       const ui = document.querySelector("#ui");
 
-      ui.addEventListener("click", function (e) {
-        // Either make a button for a single click
-        // or use a dropdown menu for multiple options
-        tripswaiver.addTo(map)
-      })
+      const addContent1 = document.querySelector("#addContent1");
+      const addContent2 = document.querySelector("#addContent2");
+      const addContent3 = document.querySelector("#addContent3");
+      const addContent4 = document.querySelector("#addContent4");
+      const addContent5 = document.querySelector("#addContent5");
 
+      // define what happens when a user clicks on dropdown menu items
       ui.addEventListener("click", function (e) {
-        // Either make a button for a single click
-        // or use a dropdown menu for multiple options
-        idleprod.addTo(map)
-      })
+  		  document.getElementById("myDropdown").classList.toggle("show");
+  		});
+
+      // supports TRIPS wavier
+      addContent1.addEventListener("click", function (e) {
+        // remove all layers from mapLayers
+        mapLayers.clearLayers();
+        // then add the selected layer
+        mapLayers.addLayer(yeswaiver);
+  		});
+
+      // opposes TRIPS wavier
+      addContent2.addEventListener("click", function (e) {
+        // remove all layers from mapLayers
+        mapLayers.clearLayers();
+        // then add the selected layer
+        mapLayers.addLayer(nowaiver);
+  		});
+
+      // unknown position on TRIPS wavier
+      addContent3.addEventListener("click", function (e) {
+        // remove all layers from mapLayers
+        mapLayers.clearLayers();
+        // then add the selected layer
+        mapLayers.addLayer(unknownwaiver);
+  		});
+
+      // all positions on TRIPS wavier
+      addContent4.addEventListener("click", function (e) {
+        // remove all layers from mapLayers
+        mapLayers.clearLayers();
+        // then add the selected layer
+        mapLayers.addLayer(yeswaiver, nowaiver, unknownwaiver);
+  		});
+
+      // idle mRNA manufacturing capacity
+      addContent5.addEventListener("click", function (e) {
+        // remove all layers from mapLayers
+        mapLayers.clearLayers();
+        // then add the selected layer
+        mapLayers.addLayer(idleprod);
+  		});
 
         updateMap(vaxrate);
 
