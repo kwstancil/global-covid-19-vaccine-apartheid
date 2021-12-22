@@ -1,5 +1,5 @@
 # global-covid-19-vaccine-apartheid
-This map depicts unequal access to Covid-19 vaccines around the world. It also highlights whether
+This <a href='https://kwstancil.github.io/global-covid-19-vaccine-apartheid' target="blank"> map</a>depicts unequal access to Covid-19 vaccines around the world. It also highlights whether
 governments support or oppose an initiative to suspend certain intellectual property restrictions
 for the duration of the pandemic to boost the production of jabs, tests, and treatments.
 Big Pharma has tried to defend its extremely profitable IP monopolies by claiming that waiving
