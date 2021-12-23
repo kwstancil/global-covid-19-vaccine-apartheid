@@ -248,7 +248,7 @@
               .setStyle({
                 color: "#ff6e00",
               })
-              .bringToFront();
+              // .bringToFront();
           });
 
           // on mousing off layer
@@ -256,7 +256,8 @@
             // reset the layer style to its original stroke color
             layer.setStyle({
               color: "#20282e",
-            });
+            })
+            // .bringToBack();
           });
         },
       }).addTo(map);
