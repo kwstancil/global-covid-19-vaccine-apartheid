@@ -328,6 +328,8 @@
         }
       });
 
+      addDropdown()
+
       // define dropdown menu items by their id values
       const ui = document.querySelector("#ui");
       const addContent1 = document.querySelector("#addContent1");
@@ -496,6 +498,32 @@
         // add the empty legend div to the map
   		  legendControl.addTo(map);
 				updateLegend(breaks);
+
+    } //end addLegend
+
+    // Add legend to map
+    function addDropdown(breaks) {
+      // check console to verify breaks array
+      console.log(breaks);
+
+        // create a new Leaflet control object, and position it top left
+        const legendControl = L.control({ position: "topright"});
+
+        // when the legend is added to the map
+        legendControl.onAdd = function () {
+          // select a div element with an id attribute of legend
+          const legend = L.DomUtil.get("ui");
+
+          // disable scroll and click/touch on map when on legend
+          L.DomEvent.disableScrollPropagation(legend);
+          L.DomEvent.disableClickPropagation(legend);
+
+          // return the selection to the method
+          return legend;
+        };
+
+        // add the empty legend div to the map
+  		  legendControl.addTo(map);
 
     } //end addLegend
 
